@@ -21,7 +21,7 @@ h1{font-size:26px;margin:4px 2px 2px;letter-spacing:-.3px}h2{font-size:18px;marg
 .row{display:flex;gap:8px;align-items:center}.sp{justify-content:space-between}
 .note{color:var(--mu);font-size:13px;margin:2px 0 8px}
 .hint{background:var(--soft);border-radius:12px;padding:6px 10px;font-size:13px;margin-bottom:8px;color:var(--pd);font-weight:600}
-.set{display:grid;grid-template-columns:28px 1fr 1fr 44px;gap:8px;align-items:center;margin-bottom:6px}
+.set{display:grid;grid-template-columns:28px 1fr 1fr;gap:8px;align-items:center;margin-bottom:6px}
 .set b{color:var(--mu);text-align:center;font-size:14px}
 input,select{width:100%;font:inherit;padding:10px;border-radius:12px;border:1.5px solid var(--soft);background:var(--bg);color:var(--tx);text-align:center}
 input:focus,select:focus{outline:2px solid var(--pink);border-color:var(--pink)}
@@ -42,7 +42,7 @@ button{font:inherit;cursor:pointer}
 svg{width:100%;height:auto}
 textarea{width:100%;font:inherit;padding:10px;border-radius:12px;border:1.5px solid var(--soft);background:var(--bg);color:var(--tx);resize:none}
 textarea:focus{outline:2px solid var(--pink)}
-.set.bw{grid-template-columns:28px 1fr 44px}
+.set.bw{grid-template-columns:28px 1fr}
 .top{position:sticky;top:env(safe-area-inset-top);background:var(--bg);z-index:5;margin:-6px 0 6px;padding:4px 0}
 .top .link{font-size:17px;padding:6px 4px}
 .feel{display:flex;gap:10px;margin:14px 0}.feel .btn{padding:18px 8px}
@@ -54,27 +54,28 @@ const W={
 A:{n:"Workout A",sub:"Squats · back · glutes",fin:"Finish: 10 min walk on an elevated treadmill",ex:[
 ["sq","Barbell squats",4,3,5,"",2.5,"","3–5 sets of 3–5 reps"],
 ["lp","Single-leg press (each leg)",2,10,12,"Leg placed high. Close to failure. Never lock the knees.",2.5],
-["lat","Lat pulldowns",3,8,10,"Last set: drop the weight and go to failure, no rest",2.5],
-["kb","Cable kickbacks (each leg)",3,12,15,"Slow 2 sec lowering, tiny pause at the top, to failure",1.25],
-["tri","Tricep cable pushdowns",3,10,15,"Superset with face pulls",1.25],
-["fp","Face pulls",3,10,15,"Squeeze shoulder blades together, not just arms",1.25]]},
+["lat","Lat pulldowns",3,10,12,"",2.5,"","2 sets of 10–12, last set AMRAP"],
+["kb","Cable kickbacks (each leg)",3,12,15,"1–2 RIR. Slow 2 sec lowering, tiny pause at the top.",1.25],
+["tri","Tricep cable pulldowns",3,10,12,"1–2 RIR. Superset with face pulls.",1.25],
+["fp","Face pulls",3,10,12,"1–2 RIR. Squeeze shoulder blades together, not just your arms.",1.25]]},
 B:{n:"Workout B",sub:"Hinge · shoulders · glutes",fin:"Finish: elevated walk or stair master",ex:[
-["rdl","Romanian deadlifts",3,6,8,"Don't reach failure. Control down, explode up.",2.5],
+["rdl","RDL",3,6,8,"Don't reach failure. Control down, explode up.",2.5],
 ["sp","Shoulder press (dumbbell/machine)",3,10,12,"Pick a weight you're confident with",1],
-["ht","Hip thrusts, 1 sec pause",3,10,12,"2 sets of 10–12, then a back-off set: ~half the weight, as many reps as possible",2.5],
-["lr","Lateral raises",3,10,10,"No momentum",0.5],
+["ht","Hip thrusts, 1 sec pause",3,10,12,"Pause 1 sec at the top. Then a back-off set with slightly less weight, as many reps as possible.",2.5,"","2 sets of 10–12 + 1 back-off set"],
+["lr","Lateral raises",2,10,12,"1 RIR, close to failure. A little momentum is okay.",0.5],
 ["ha","Hip abductions",3,12,12,"Lean forward slightly. Last set: as many reps as possible",2.5],
 ["row","Seated cable rows",3,12,12,"Challenging, close to failure",2.5]]},
-C:{n:"Workout C",sub:"Paused squats · arms · power",fin:"Core: straight leg raises or Russian twists (alternate each week)",ex:[
-["psq","Paused barbell squats",4,4,4,"Challenging but not to failure. Keep your form.",2.5,"","4 sets of 4 reps"],
-["bc","Bicep curls",3,10,10,"",1],
-["gk","Glute cable kickbacks (each leg)",3,12,15,"Controlled, to failure or 1 rep short",1.25],
-["pu","Push-ups from the knees",2,0,0,"To failure. Try to add reps each session. Elbows at 45°.",0,"bw","2 sets to failure"],
-["bj","Box jumps",5,6,6,"Rest until your breathing calms down",0,"note","5 sets of 6 jumps"],
+C:{n:"Workout C",sub:"Lunges · arms · glutes",fin:"Finish with 5–10 min of cardio, such as the stair master",ex:[
+["wl","Long-step dumbbell walking lunges",3,10,10,"20 steps per set. Take a long step and lean slightly forward.",2,"","3 sets of 10 per leg"],
+["bc","Bicep curls",3,10,12,"0–1 RIR",1],
+["be","Weighted back extension",3,12,15,"Warm up without any weight. Round your upper back slightly for more glute activation. On the last set, when you reach failure, drop the weight and do a few more reps without a weight in your hand.",2.5],
+["cp","Dumbbell chest press on a bench",2,10,12,"1 RIR. Do not flare the elbows, it will hurt your shoulders.",1],
+["ha","Hip abductions",3,12,12,"Lean forward slightly. Last set: as many reps as possible",2.5],
 ["core","Leg raises / Russian twists",3,10,15,"Alternate each week",0,"bw"]]}};
-const ALL=Object.values(W).flatMap(w=>w.ex);const EX=Object.fromEntries(ALL.map(e=>[e[0],e]));
+const ALL=[...new Map(Object.values(W).flatMap(w=>w.ex).map(e=>[e[0],e])).values()];const EX=Object.fromEntries(ALL.map(e=>[e[0],e]));
 let S={sessions:[],draft:null},view="train",sel="sq",open=false;
 try{S=JSON.parse(localStorage.getItem("zfit"))||S}catch(e){}
+if(S.draft&&(!W[S.draft.w]||W[S.draft.w].ex.some(e=>!S.draft.sets[e[0]])))S.draft=null;
 const save=()=>{try{localStorage.setItem("zfit",JSON.stringify(S))}catch(e){}};
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmt=n=>+(+n).toFixed(2);
@@ -97,7 +98,7 @@ function trainView(){const d=S.draft;
  <div class="card wu"><h2>Warm-up</h2><label><input type="checkbox" data-a="wu" data-i="0" ${d.wu[0]?"checked":""}>3–5 min rower, elliptical or fan bike</label><label><input type="checkbox" data-a="wu" data-i="1" ${d.wu[1]?"checked":""}>2–3 min joint warm-up and dynamic stretches</label></div>`+
  w.ex.map(e=>{const id=e[0],t=e[7],sg=suggest(id),head=`<h2>${e[1]}</h2><div class="note">${e[8]||e[2]+" × "+(e[3]===e[4]?(e[3]||"failure"):e[3]+"–"+e[4])}${e[5]?" · "+e[5]:""}</div>`;
  if(t==="note")return`<div class="card">${head}<textarea rows="3" placeholder="How did the box jumps feel?" data-e="${id}" data-f="note">${esc((d.notes||{})[id]||"")}</textarea></div>`;
- return`<div class="card">${head}<div class="hint">${sg.txt}</div>${(d.sets[id]||[]).map((s,i)=>`<div class="set ${t==="bw"?"bw":""}"><b>${i+1}</b>${t==="bw"?"":`<input type="number" inputmode="decimal" placeholder="kg" value="${s.w}" data-e="${id}" data-i="${i}" data-f="w">`}<input type="number" inputmode="numeric" placeholder="reps" value="${s.r}" data-e="${id}" data-i="${i}" data-f="r"><button class="chk ${s.d?"on":""}" data-a="done" data-e="${id}" data-i="${i}">✓</button></div>`).join("")}<button class="link" data-a="add" data-e="${id}">+ Add set</button></div>`}).join("")+
+ return`<div class="card">${head}<div class="hint">${sg.txt}</div>${(d.sets[id]||[]).map((s,i)=>`<div class="set ${t==="bw"?"bw":""}"><b>${i+1}</b>${t==="bw"?"":`<input type="number" inputmode="decimal" placeholder="kg" value="${s.w}" data-e="${id}" data-i="${i}" data-f="w">`}<input type="number" inputmode="numeric" placeholder="reps" value="${s.r}" data-e="${id}" data-i="${i}" data-f="r"></div>`).join("")}<button class="link" data-a="add" data-e="${id}">+ Add set</button></div>`}).join("")+
  `<div class="card"><b>${w.fin}</b></div><button class="btn" data-a="finish">Finish and save</button><p></p><button class="btn alt" data-a="discard">Discard workout</button>`}
 function chart(id){const pts=S.sessions.filter(s=>s.log[id]&&s.log[id].length).map(s=>{const a=s.log[id],tw=Math.max(...a.map(x=>x.w));return{d:s.date,v:tw>0?tw:Math.max(...a.map(x=>x.r)),u:tw>0?"kg":"reps"}});
  if(!pts.length)return`<p class="note">No sessions logged for this exercise yet.</p>`;
